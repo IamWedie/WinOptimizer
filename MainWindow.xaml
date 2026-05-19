@@ -1,0 +1,686 @@
+<Window x:Class="WinOptimizer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="WinOptimizer Pro" Height="700" Width="1100"
+        Icon="icon.ico"
+        Background="#0F0F0F" WindowStartupLocation="CenterScreen"
+        FontFamily="Segoe UI">
+
+    <Window.Resources>
+
+        <!-- Skeleton Block -->
+        <Style x:Key="SkeletonBlock" TargetType="Border">
+            <Setter Property="Background" Value="#2A2A2A"/>
+            <Setter Property="CornerRadius" Value="6"/>
+        </Style>
+
+        <!-- Welcome Card -->
+        <Style x:Key="WelcomeCard" TargetType="Button">
+            <Setter Property="Background" Value="#141414"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#2A2A2A"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="14" Padding="24">
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#1A1A2E"/>
+                                <Setter Property="BorderBrush" Value="#6C63FF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Sidebar Button -->
+        <Style x:Key="SidebarBtn" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#AAAAAA"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="20,14"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderThickness="0" CornerRadius="8" Margin="8,2">
+                            <ContentPresenter Margin="12,10"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#1E1E1E"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Active Sidebar Button -->
+        <Style x:Key="SidebarBtnActive" TargetType="Button" BasedOn="{StaticResource SidebarBtn}">
+            <Setter Property="Background" Value="#1A1A2E"/>
+            <Setter Property="Foreground" Value="#6C63FF"/>
+        </Style>
+
+        <!-- Action Button -->
+        <Style x:Key="ActionBtn" TargetType="Button">
+            <Setter Property="Background" Value="#6C63FF"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="16,10"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="8" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#7B74FF"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Background" Value="#333"/>
+                                <Setter Property="Foreground" Value="#666"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Danger Button -->
+        <Style x:Key="DangerBtn" TargetType="Button" BasedOn="{StaticResource ActionBtn}">
+            <Setter Property="Background" Value="#C0392B"/>
+        </Style>
+
+        <!-- Green Button -->
+        <Style x:Key="GreenBtn" TargetType="Button" BasedOn="{StaticResource ActionBtn}">
+            <Setter Property="Background" Value="#27AE60"/>
+        </Style>
+
+        <!-- Dark ListBox -->
+        <Style x:Key="DarkListBox" TargetType="ListBox">
+            <Setter Property="Background" Value="#141414"/>
+            <Setter Property="BorderBrush" Value="#2A2A2A"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+        </Style>
+
+        <!-- ListBoxItem -->
+        <Style TargetType="ListBoxItem">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#CCCCCC"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="#1E1E1E" BorderThickness="0,0,0,1"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#1A1A2E"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="#1A1A2E"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Search Box -->
+        <Style x:Key="SearchBox" TargetType="TextBox">
+            <Setter Property="Background" Value="#1E1E1E"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#333"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="CaretBrush" Value="White"/>
+        </Style>
+
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- ═══ SIDEBAR ═══ -->
+        <Border Grid.Column="0" Background="#0A0A0A" BorderBrush="#1E1E1E" BorderThickness="0,0,1,0">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Top">
+                    <Border Padding="20,24,20,16">
+                        <StackPanel>
+                            <TextBlock Text="⚡ WinOptimizer" FontSize="16" FontWeight="Bold" Foreground="White"/>
+                            <TextBlock Text="Pro Edition" FontSize="11" Foreground="#6C63FF" Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </Border>
+                    <Rectangle Height="1" Fill="#1E1E1E" Margin="16,0"/>
+                    <StackPanel Margin="0,12,0,0">
+                        <Button x:Name="BtnHome"        Content="🏠  Home"             Style="{StaticResource SidebarBtnActive}" Click="BtnHome_Click"/>
+                        <Button x:Name="BtnServices"    Content="🔧  Services Manager" Style="{StaticResource SidebarBtn}"       Click="BtnServices_Click"/>
+                        <Button x:Name="BtnUninstaller" Content="🗑️  App Uninstaller"  Style="{StaticResource SidebarBtn}"       Click="BtnUninstaller_Click"/>
+                        <Button x:Name="BtnCache"      Content="🚀  Cache Cleaner"    Style="{StaticResource SidebarBtn}"       Click="BtnCache_Click"/>
+                        <Button x:Name="BtnDebloat"    Content="🛡️  Debloat Windows"  Style="{StaticResource SidebarBtn}"       Click="BtnDebloat_Click"/>
+                        <Button x:Name="BtnPrivacy"    Content="🔒  Privacy Tweaks"   Style="{StaticResource SidebarBtn}"       Click="BtnPrivacy_Click"/>
+                    </StackPanel>
+                </StackPanel>
+                <TextBlock DockPanel.Dock="Bottom" Text="v1.0  •  Run as Admin"
+                           FontSize="10" Foreground="#444" Margin="20,0,0,12"/>
+            </DockPanel>
+        </Border>
+
+        <!-- ═══ MAIN CONTENT ═══ -->
+        <Grid Grid.Column="1">
+
+            <!-- ══════════════ HOME PAGE ══════════════ -->
+            <Grid x:Name="PageHome" Visibility="Visible">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Title -->
+                <Border Grid.Row="0" Padding="36,28,36,0">
+                    <StackPanel>
+                        <TextBlock Text="⚡ Welcome to WinOptimizer Pro"
+                                   FontSize="24" FontWeight="Bold" Foreground="White"/>
+                        <TextBlock Text="Your PC is ready to be optimized. Choose a tool below to get started."
+                                   FontSize="13" Foreground="#666" Margin="0,6,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Stats Bar -->
+                <Border Grid.Row="1" Margin="36,16,36,0" Background="#0D0D0D"
+                        BorderBrush="#1E1E1E" BorderThickness="1" CornerRadius="10" Padding="20,14">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" HorizontalAlignment="Center">
+                            <TextBlock Text="💾 RAM Free" Foreground="#666" FontSize="11" HorizontalAlignment="Center"/>
+                            <Border x:Name="SkeletonRam" Style="{StaticResource SkeletonBlock}" Height="20" Width="80" Margin="0,6,0,0"/>
+                            <TextBlock x:Name="StatRam" Text="" Foreground="#6C63FF" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" Visibility="Collapsed"/>
+                        </StackPanel>
+
+                        <Rectangle Grid.Column="1" Fill="#1E1E1E" Width="1"/>
+
+                        <StackPanel Grid.Column="2" HorizontalAlignment="Center">
+                            <TextBlock Text="📁 Temp Junk" Foreground="#666" FontSize="11" HorizontalAlignment="Center"/>
+                            <Border x:Name="SkeletonTemp" Style="{StaticResource SkeletonBlock}" Height="20" Width="80" Margin="0,6,0,0"/>
+                            <TextBlock x:Name="StatTemp" Text="" Foreground="#E74C3C" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" Visibility="Collapsed"/>
+                        </StackPanel>
+
+                        <Rectangle Grid.Column="3" Fill="#1E1E1E" Width="1"/>
+
+                        <StackPanel Grid.Column="4" HorizontalAlignment="Center">
+                            <TextBlock Text="🔧 Services Running" Foreground="#666" FontSize="11" HorizontalAlignment="Center"/>
+                            <Border x:Name="SkeletonSvc" Style="{StaticResource SkeletonBlock}" Height="20" Width="80" Margin="0,6,0,0"/>
+                            <TextBlock x:Name="StatServices" Text="" Foreground="#F39C12" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" Visibility="Collapsed"/>
+                        </StackPanel>
+
+                        <Rectangle Grid.Column="5" Fill="#1E1E1E" Width="1"/>
+
+                        <StackPanel Grid.Column="6" HorizontalAlignment="Center">
+                            <TextBlock Text="📦 Apps Installed" Foreground="#666" FontSize="11" HorizontalAlignment="Center"/>
+                            <Border x:Name="SkeletonApps" Style="{StaticResource SkeletonBlock}" Height="20" Width="80" Margin="0,6,0,0"/>
+                            <TextBlock x:Name="StatApps" Text="" Foreground="#27AE60" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" Visibility="Collapsed"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Feature Cards -->
+                <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+                    <UniformGrid Columns="2" Margin="28,16,28,16">
+
+                        <Button Style="{StaticResource WelcomeCard}" Margin="0,0,8,8" Click="BtnServices_Click">
+                            <StackPanel>
+                                <TextBlock Text="🔧" FontSize="30" Margin="0,0,0,8"/>
+                                <TextBlock Text="Services Manager" FontSize="15" FontWeight="Bold" Foreground="White" Margin="0,0,0,6"/>
+                                <TextBlock TextWrapping="Wrap" Foreground="#888" FontSize="12"
+                                    Text="View every Windows service with risk ratings, descriptions and safe-to-disable recommendations."/>
+                                <Border Background="#1A1A2E" CornerRadius="6" Padding="10,6" Margin="0,12,0,0" HorizontalAlignment="Left">
+                                    <TextBlock Text="Open →" Foreground="#6C63FF" FontSize="12" FontWeight="SemiBold"/>
+                                </Border>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Style="{StaticResource WelcomeCard}" Margin="8,0,0,8" Click="BtnUninstaller_Click">
+                            <StackPanel>
+                                <TextBlock Text="🗑️" FontSize="30" Margin="0,0,0,8"/>
+                                <TextBlock Text="App Uninstaller" FontSize="15" FontWeight="Bold" Foreground="White" Margin="0,0,0,6"/>
+                                <TextBlock TextWrapping="Wrap" Foreground="#888" FontSize="12"
+                                    Text="Deep uninstall apps like Revo — removes the app, leftover registry keys and junk folders."/>
+                                <Border Background="#1A1A2E" CornerRadius="6" Padding="10,6" Margin="0,12,0,0" HorizontalAlignment="Left">
+                                    <TextBlock Text="Open →" Foreground="#6C63FF" FontSize="12" FontWeight="SemiBold"/>
+                                </Border>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Style="{StaticResource WelcomeCard}" Margin="0,8,8,8" Click="BtnCache_Click">
+                            <StackPanel>
+                                <TextBlock Text="🚀" FontSize="30" Margin="0,0,0,8"/>
+                                <TextBlock Text="Cache Cleaner" FontSize="15" FontWeight="Bold" Foreground="White" Margin="0,0,0,6"/>
+                                <TextBlock TextWrapping="Wrap" Foreground="#888" FontSize="12"
+                                    Text="Clear RAM, temp files, DNS cache, browser caches and Windows Update cache instantly."/>
+                                <Border Background="#1A1A2E" CornerRadius="6" Padding="10,6" Margin="0,12,0,0" HorizontalAlignment="Left">
+                                    <TextBlock Text="Open →" Foreground="#6C63FF" FontSize="12" FontWeight="SemiBold"/>
+                                </Border>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Style="{StaticResource WelcomeCard}" Margin="8,8,0,8" Click="BtnDebloat_Click">
+                            <StackPanel>
+                                <TextBlock Text="🛡️" FontSize="30" Margin="0,0,0,8"/>
+                                <TextBlock Text="Debloat Windows" FontSize="15" FontWeight="Bold" Foreground="White" Margin="0,0,0,6"/>
+                                <TextBlock TextWrapping="Wrap" Foreground="#888" FontSize="12"
+                                    Text="Remove Xbox, Cortana, Candy Crush and 20+ pre-installed bloatware apps with one click."/>
+                                <Border Background="#1A1A2E" CornerRadius="6" Padding="10,6" Margin="0,12,0,0" HorizontalAlignment="Left">
+                                    <TextBlock Text="Open →" Foreground="#6C63FF" FontSize="12" FontWeight="SemiBold"/>
+                                </Border>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Style="{StaticResource WelcomeCard}" Margin="0,0,8,0" Click="BtnPrivacy_Click">
+                            <StackPanel>
+                                <TextBlock Text="🔒" FontSize="30" Margin="0,0,0,8"/>
+                                <TextBlock Text="Privacy Tweaks" FontSize="15" FontWeight="Bold" Foreground="White" Margin="0,0,0,6"/>
+                                <TextBlock TextWrapping="Wrap" Foreground="#888" FontSize="12"
+                                    Text="Disable telemetry, activity tracking, location, Bing search and advertising ID."/>
+                                <Border Background="#1A1A2E" CornerRadius="6" Padding="10,6" Margin="0,12,0,0" HorizontalAlignment="Left">
+                                    <TextBlock Text="Open →" Foreground="#6C63FF" FontSize="12" FontWeight="SemiBold"/>
+                                </Border>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Style="{StaticResource WelcomeCard}" Margin="8,0,0,0" Click="BtnQuickClean_Click">
+                            <StackPanel>
+                                <TextBlock Text="⚡" FontSize="30" Margin="0,0,0,8"/>
+                                <TextBlock Text="Quick Clean" FontSize="15" FontWeight="Bold" Foreground="White" Margin="0,0,0,6"/>
+                                <TextBlock TextWrapping="Wrap" Foreground="#888" FontSize="12"
+                                    Text="One click to clear ALL caches — RAM, temp files, DNS, browser and Windows Update cache."/>
+                                <Border Background="#6C63FF" CornerRadius="6" Padding="10,6" Margin="0,12,0,0" HorizontalAlignment="Left">
+                                    <TextBlock Text="Run Now ⚡" Foreground="White" FontSize="12" FontWeight="SemiBold"/>
+                                </Border>
+                            </StackPanel>
+                        </Button>
+
+                    </UniformGrid>
+                </ScrollViewer>
+
+                <!-- Footer warning -->
+                <Border Grid.Row="3" Padding="36,10" BorderBrush="#1E1E1E" BorderThickness="0,1,0,0">
+                    <TextBlock Foreground="#444" FontSize="11"
+                               Text="⚠️  Always create a restore point before making system changes."/>
+                </Border>
+            </Grid>
+
+            <!-- ══════════════ SERVICES PAGE ══════════════ -->
+            <Grid x:Name="PageServices" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0" Padding="28,20,28,16" BorderBrush="#1E1E1E" BorderThickness="0,0,0,1">
+                    <StackPanel>
+                        <TextBlock Text="🔧 Services Manager" FontSize="22" FontWeight="Bold" Foreground="White"/>
+                        <TextBlock Text="View, enable, or disable Windows services safely." FontSize="13" Foreground="#666" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="320"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0" Margin="20">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBox x:Name="TxtServiceSearch" Grid.Row="0" Style="{StaticResource SearchBox}"
+                                 Text="Search services..." Margin="0,0,0,10"
+                                 GotFocus="TxtServiceSearch_GotFocus"
+                                 LostFocus="TxtServiceSearch_LostFocus"
+                                 TextChanged="TxtServiceSearch_TextChanged"/>
+                        <ListBox x:Name="LstServices" Grid.Row="1" Style="{StaticResource DarkListBox}"
+                                 SelectionChanged="LstServices_SelectionChanged">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="12"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="80"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Ellipse Grid.Column="0" Width="8" Height="8" Fill="{Binding StatusColor}" VerticalAlignment="Center"/>
+                                        <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                            <TextBlock Text="{Binding DisplayName}" FontWeight="SemiBold" Foreground="White" FontSize="13"/>
+                                            <TextBlock Text="{Binding ServiceName}" Foreground="#666" FontSize="11"/>
+                                        </StackPanel>
+                                        <TextBlock Grid.Column="2" Text="{Binding Status}" Foreground="{Binding StatusColor}"
+                                                   FontSize="11" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,10,0,0" HorizontalAlignment="Right">
+                            <Button Content="▶ Start"   Style="{StaticResource GreenBtn}"  Margin="0,0,8,0" Click="BtnStartService_Click"/>
+                            <Button Content="⏹ Stop"    Style="{StaticResource DangerBtn}" Margin="0,0,8,0" Click="BtnStopService_Click"/>
+                            <Button Content="🔄 Refresh" Style="{StaticResource ActionBtn}"               Click="BtnRefreshServices_Click"/>
+                        </StackPanel>
+                    </Grid>
+                    <Border Grid.Column="1" Background="#0D0D0D" BorderBrush="#1E1E1E" BorderThickness="1,0,0,0" Padding="20">
+                        <StackPanel>
+                            <TextBlock x:Name="TxtSvcName" Text="Select a service" FontSize="15" FontWeight="Bold" Foreground="White"/>
+                            <Rectangle Height="1" Fill="#1E1E1E" Margin="0,12"/>
+                            <TextBlock Text="STATUS"          FontSize="10" Foreground="#555" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock x:Name="TxtSvcStatus"  Text="—" Foreground="#AAAAAA" FontSize="13" Margin="0,0,0,16"/>
+                            <TextBlock Text="STARTUP TYPE"    FontSize="10" Foreground="#555" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock x:Name="TxtSvcStartup" Text="—" Foreground="#AAAAAA" FontSize="13" Margin="0,0,0,16"/>
+                            <TextBlock Text="RISK LEVEL"      FontSize="10" Foreground="#555" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock x:Name="TxtSvcRisk"    Text="—" Foreground="#AAAAAA" FontSize="13" Margin="0,0,0,16"/>
+                            <TextBlock Text="DESCRIPTION"     FontSize="10" Foreground="#555" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock x:Name="TxtSvcDescription" Text="Select a service to see details."
+                                       Foreground="#AAAAAA" FontSize="13" TextWrapping="Wrap" Margin="0,0,0,20"/>
+                            <TextBlock Text="RECOMMENDATION"  FontSize="10" Foreground="#555" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock x:Name="TxtSvcRecommendation" Text="—"
+                                       Foreground="#6C63FF" FontSize="13" TextWrapping="Wrap" Margin="0,0,0,24"/>
+                            <Button x:Name="BtnDisableService" Content="⛔ Disable Service" Style="{StaticResource DangerBtn}" Margin="0,0,0,8" Click="BtnDisableService_Click"/>
+                            <Button x:Name="BtnEnableService"  Content="✅ Enable Service"  Style="{StaticResource GreenBtn}"  Click="BtnEnableService_Click"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Grid>
+
+            <!-- ══════════════ UNINSTALLER PAGE ══════════════ -->
+            <Grid x:Name="PageUninstaller" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0" Padding="28,20,28,16" BorderBrush="#1E1E1E" BorderThickness="0,0,0,1">
+                    <StackPanel>
+                        <TextBlock Text="🗑️ App Uninstaller" FontSize="22" FontWeight="Bold" Foreground="White"/>
+                        <TextBlock Text="Deep uninstall apps — removes registry leftovers and junk folders." FontSize="13" Foreground="#666" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+                <Grid Grid.Row="1" Margin="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="120"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="TxtAppSearch" Style="{StaticResource SearchBox}" Text="Search apps..."
+                                 GotFocus="TxtAppSearch_GotFocus" LostFocus="TxtAppSearch_LostFocus"
+                                 TextChanged="TxtAppSearch_TextChanged"/>
+                        <Button Grid.Column="1" Content="🔄 Refresh" Margin="10,0,0,0"
+                                Style="{StaticResource ActionBtn}" Click="BtnRefreshApps_Click"/>
+                    </Grid>
+                    <ListBox x:Name="LstApps" Grid.Row="1" Style="{StaticResource DarkListBox}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="80"/>
+                                        <ColumnDefinition Width="100"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Foreground="White" FontSize="13"/>
+                                        <TextBlock Text="{Binding Publisher}" Foreground="#666" FontSize="11"/>
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="1" Text="{Binding Size}" Foreground="#888" FontSize="12"
+                                               VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <Button Grid.Column="2" Content="🗑️ Uninstall" Style="{StaticResource DangerBtn}"
+                                            FontSize="11" Padding="8,6" Tag="{Binding}" Click="BtnUninstallApp_Click"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <Border Grid.Row="2" Background="#0D0D0D" BorderBrush="#1E1E1E" BorderThickness="1"
+                            Margin="0,10,0,0" Height="100" CornerRadius="6">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="10">
+                            <TextBlock x:Name="TxtUninstallLog" Foreground="#888" FontSize="12" TextWrapping="Wrap"
+                                       Text="Uninstall log will appear here..."/>
+                        </ScrollViewer>
+                    </Border>
+                </Grid>
+            </Grid>
+
+            <!-- ══════════════ CACHE PAGE ══════════════ -->
+            <Grid x:Name="PageCache" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0" Padding="28,20,28,16" BorderBrush="#1E1E1E" BorderThickness="0,0,0,1">
+                    <StackPanel>
+                        <TextBlock Text="🚀 Cache Cleaner" FontSize="22" FontWeight="Bold" Foreground="White"/>
+                        <TextBlock Text="Clear RAM, disk temp files, DNS, browser caches and more." FontSize="13" Foreground="#666" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="28,20">
+
+                        <Border Background="#141414" BorderBrush="#1E1E1E" BorderThickness="1" CornerRadius="10" Padding="20" Margin="0,0,0,12">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="💾 RAM Cache" FontSize="16" FontWeight="Bold" Foreground="White"/>
+                                    <TextBlock x:Name="TxtRamInfo" Text="Calculating..." Foreground="#888" FontSize="13" Margin="0,4,0,0"/>
+                                    <TextBlock Text="Clears working set memory from all processes." Foreground="#555" FontSize="12" Margin="0,4,0,0"/>
+                                </StackPanel>
+                                <Button Grid.Column="1" Content="Clear RAM" Style="{StaticResource ActionBtn}" VerticalAlignment="Center" Click="BtnClearRam_Click"/>
+                            </Grid>
+                        </Border>
+
+                        <Border Background="#141414" BorderBrush="#1E1E1E" BorderThickness="1" CornerRadius="10" Padding="20" Margin="0,0,0,12">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="📁 Temp Files" FontSize="16" FontWeight="Bold" Foreground="White"/>
+                                    <TextBlock x:Name="TxtTempInfo" Text="Calculating..." Foreground="#888" FontSize="13" Margin="0,4,0,0"/>
+                                    <TextBlock Text="%TEMP%, C:\Windows\Temp, Prefetch" Foreground="#555" FontSize="12" Margin="0,4,0,0"/>
+                                </StackPanel>
+                                <Button Grid.Column="1" Content="Clear Temp" Style="{StaticResource ActionBtn}" VerticalAlignment="Center" Click="BtnClearTemp_Click"/>
+                            </Grid>
+                        </Border>
+
+                        <Border Background="#141414" BorderBrush="#1E1E1E" BorderThickness="1" CornerRadius="10" Padding="20" Margin="0,0,0,12">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="🌐 DNS Cache" FontSize="16" FontWeight="Bold" Foreground="White"/>
+                                    <TextBlock Text="Cached DNS lookups" Foreground="#888" FontSize="13" Margin="0,4,0,0"/>
+                                    <TextBlock Text="Flushes DNS resolver cache (ipconfig /flushdns)" Foreground="#555" FontSize="12" Margin="0,4,0,0"/>
+                                </StackPanel>
+                                <Button Grid.Column="1" Content="Flush DNS" Style="{StaticResource ActionBtn}" VerticalAlignment="Center" Click="BtnFlushDns_Click"/>
+                            </Grid>
+                        </Border>
+
+                        <Border Background="#141414" BorderBrush="#1E1E1E" BorderThickness="1" CornerRadius="10" Padding="20" Margin="0,0,0,12">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="🪟 Windows Update Cache" FontSize="16" FontWeight="Bold" Foreground="White"/>
+                                    <TextBlock x:Name="TxtWuInfo" Text="Calculating..." Foreground="#888" FontSize="13" Margin="0,4,0,0"/>
+                                    <TextBlock Text="SoftwareDistribution\Download folder" Foreground="#555" FontSize="12" Margin="0,4,0,0"/>
+                                </StackPanel>
+                                <Button Grid.Column="1" Content="Clear WU Cache" Style="{StaticResource ActionBtn}" VerticalAlignment="Center" Click="BtnClearWUCache_Click"/>
+                            </Grid>
+                        </Border>
+
+                        <Border Background="#141414" BorderBrush="#1E1E1E" BorderThickness="1" CornerRadius="10" Padding="20" Margin="0,0,0,12">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="🌍 Browser Cache" FontSize="16" FontWeight="Bold" Foreground="White"/>
+                                    <TextBlock x:Name="TxtBrowserInfo" Text="Calculating..." Foreground="#888" FontSize="13" Margin="0,4,0,0"/>
+                                    <TextBlock Text="Chrome, Firefox, Edge caches" Foreground="#555" FontSize="12" Margin="0,4,0,0"/>
+                                </StackPanel>
+                                <Button Grid.Column="1" Content="Clear Browser" Style="{StaticResource ActionBtn}" VerticalAlignment="Center" Click="BtnClearBrowser_Click"/>
+                            </Grid>
+                        </Border>
+
+                        <Border Background="#141414" BorderBrush="#1E1E1E" BorderThickness="1" CornerRadius="10" Padding="20" Margin="0,0,0,12">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="🖼️ Thumbnail Cache" FontSize="16" FontWeight="Bold" Foreground="White"/>
+                                    <TextBlock Text="Windows Explorer thumbnails" Foreground="#888" FontSize="13" Margin="0,4,0,0"/>
+                                    <TextBlock Text="thumbcache_*.db files in Explorer" Foreground="#555" FontSize="12" Margin="0,4,0,0"/>
+                                </StackPanel>
+                                <Button Grid.Column="1" Content="Clear Thumbnails" Style="{StaticResource ActionBtn}" VerticalAlignment="Center" Click="BtnClearThumbnails_Click"/>
+                            </Grid>
+                        </Border>
+
+                        <Button Content="⚡  CLEAR ALL CACHE" Style="{StaticResource ActionBtn}"
+                                FontSize="16" Padding="0,16" Margin="0,8,0,0" Click="BtnClearAll_Click"/>
+
+                        <Border Background="#0D0D0D" BorderBrush="#1E1E1E" BorderThickness="1"
+                                Margin="0,16,0,0" Height="100" CornerRadius="6">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="10">
+                                <TextBlock x:Name="TxtCacheLog" Foreground="#888" FontSize="12" TextWrapping="Wrap"
+                                           Text="Cache cleaner log will appear here..."/>
+                            </ScrollViewer>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+
+            <!-- ══════════════ DEBLOAT PAGE ══════════════ -->
+            <Grid x:Name="PageDebloat" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0" Padding="28,20,28,16" BorderBrush="#1E1E1E" BorderThickness="0,0,0,1">
+                    <StackPanel>
+                        <TextBlock Text="🛡️ Debloat Windows" FontSize="22" FontWeight="Bold" Foreground="White"/>
+                        <TextBlock Text="Remove pre-installed bloatware apps from Windows." FontSize="13" Foreground="#666" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+                <ListBox x:Name="LstBloatware" Grid.Row="1" Margin="20" Style="{StaticResource DarkListBox}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="0,6">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="100"/>
+                                </Grid.ColumnDefinitions>
+                                <CheckBox Grid.Column="0" IsChecked="{Binding IsSelected}" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Foreground="White" FontSize="13"/>
+                                    <TextBlock Text="{Binding Description}" Foreground="#666" FontSize="11" TextWrapping="Wrap"/>
+                                </StackPanel>
+                                <TextBlock Grid.Column="2" Text="{Binding Status}" Foreground="{Binding StatusColor}"
+                                           VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="12"/>
+                                <Button Grid.Column="3" Content="Remove" Style="{StaticResource DangerBtn}"
+                                        FontSize="11" Padding="8,6" Tag="{Binding}" Click="BtnRemoveBloat_Click"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="20,0,20,20" HorizontalAlignment="Right">
+                    <Button Content="Remove Selected" Style="{StaticResource DangerBtn}" Margin="0,0,10,0" Click="BtnRemoveSelected_Click"/>
+                    <Button Content="🔄 Refresh Status" Style="{StaticResource ActionBtn}" Click="BtnRefreshBloat_Click"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- ══════════════ PRIVACY PAGE ══════════════ -->
+            <Grid x:Name="PagePrivacy" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0" Padding="28,20,28,16" BorderBrush="#1E1E1E" BorderThickness="0,0,0,1">
+                    <StackPanel>
+                        <TextBlock Text="🔒 Privacy Tweaks" FontSize="22" FontWeight="Bold" Foreground="White"/>
+                        <TextBlock Text="Disable telemetry, tracking, and data collection." FontSize="13" Foreground="#666" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <ListBox x:Name="LstPrivacy" Margin="20" Style="{StaticResource DarkListBox}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="120"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Foreground="White" FontSize="13"/>
+                                        <TextBlock Text="{Binding Description}" Foreground="#666" FontSize="11" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                    </StackPanel>
+                                    <Button Grid.Column="1" Content="{Binding ActionText}" Style="{StaticResource ActionBtn}"
+                                            FontSize="11" Padding="8,6" VerticalAlignment="Center"
+                                            Tag="{Binding}" Click="BtnApplyPrivacy_Click"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </ScrollViewer>
+            </Grid>
+
+        </Grid>
+    </Grid>
+</Window>
